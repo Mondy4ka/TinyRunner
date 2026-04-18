@@ -2,17 +2,20 @@ using UnityEngine;
 
 public class Player : MonoBehaviour
 {
-    public PlayerMovement PlayerMovement {  get; private set; }
+    public PlayerMovement PlayerMovement { get; private set; }
+    public PlayerTrigger PlayerTrigger => _playerTrigger;
 
     [Header("Movement Settings")]
-    [SerializeField] private float _startSpeed;
     [SerializeField] private float _topYPosition;
     [SerializeField] private float _downYPosition;
 
-    public void Initialize(InputManager inputManager)
+    [Header("Hitbox Settings")]
+    [SerializeField] private PlayerTrigger _playerTrigger;
+
+    public void Initialize(GameManager gameManager, InputManager inputManager, SpeedManager speedManager)
     {
-        PlayerMovement = new(inputManager, transform, _topYPosition, _downYPosition, _startSpeed);
-    
+        PlayerMovement = new(gameManager, inputManager, speedManager, transform, _topYPosition, _downYPosition);
+
         PlayerMovement.Initialize();
     }
 

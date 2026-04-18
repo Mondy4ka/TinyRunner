@@ -6,7 +6,9 @@ public class CameraFollow : MonoBehaviour
     [SerializeField] private Transform _cameraTransform;
     [SerializeField] private float _offsetX;
 
-    private void Update()
+    private void Update() => Follow();
+
+    private void Follow()
     {
         Vector3 newPosition = _cameraTransform.position;
         newPosition.x = _target.position.x + _offsetX;
@@ -17,11 +19,6 @@ public class CameraFollow : MonoBehaviour
     private void OnValidate()
     {
         if (_target != null && _cameraTransform != null)
-        {
-            Vector3 newPosition = _cameraTransform.position;
-            newPosition.x = _target.position.x + _offsetX;
-
-            _cameraTransform.position = newPosition;
-        }
+            Follow();
     }
 }

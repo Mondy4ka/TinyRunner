@@ -44,8 +44,8 @@ PlayerSettings:
   m_HolographicTrackingLossScreen: {fileID: 0}
   defaultScreenWidth: 1920
   defaultScreenHeight: 1080
-  defaultScreenWidthWeb: 960
-  defaultScreenHeightWeb: 600
+  defaultScreenWidthWeb: 1920
+  defaultScreenHeightWeb: 1080
   m_StereoRenderingPath: 0
   m_ActiveColorSpace: 1
   unsupportedMSAAFallback: 0
@@ -75,8 +75,8 @@ PlayerSettings:
   androidResizeableActivity: 1
   androidDefaultWindowWidth: 1920
   androidDefaultWindowHeight: 1080
-  androidMinimumWindowWidth: 400
-  androidMinimumWindowHeight: 300
+  androidMinimumWindowWidth: 1920
+  androidMinimumWindowHeight: 1080
   androidFullscreenMode: 1
   androidAutoRotationBehavior: 1
   androidPredictiveBackSupport: 0
@@ -399,7 +399,8 @@ PlayerSettings:
   openGLRequireES31: 0
   openGLRequireES31AEP: 0
   openGLRequireES32: 0
-  m_TemplateCustomTags: {}
+  m_TemplateCustomTags:
+    PRODUCT_DESCRIPTION: 
   mobileMTRendering:
     Android: 1
     iPhone: 1
@@ -409,7 +410,13 @@ PlayerSettings:
   m_BuildTargetGroupLightmapSettings: []
   m_BuildTargetGroupLoadStoreDebugModeSettings: []
   m_BuildTargetNormalMapEncoding: []
-  m_BuildTargetDefaultTextureCompressionFormat: []
+  m_BuildTargetDefaultTextureCompressionFormat:
+  - serializedVersion: 3
+    m_BuildTarget: WebGL
+    m_Formats: 05000000
+  - serializedVersion: 3
+    m_BuildTarget: Android
+    m_Formats: 01000000
   playModeTestRunnerEnabled: 0
   runPlayModeTestAsEditModeTest: 0
   actionOnDotNetUnhandledException: 1
@@ -655,7 +662,7 @@ PlayerSettings:
   webGLDebugSymbols: 0
   webGLEmscriptenArgs: 
   webGLModulesDirectory: 
-  webGLTemplate: APPLICATION:Default
+  webGLTemplate: APPLICATION:Minimal
   webGLAnalyzeBuildSize: 0
   webGLUseEmbeddedResources: 0
   webGLCompressionFormat: 0
@@ -675,7 +682,25 @@ PlayerSettings:
   webGLCloseOnQuit: 0
   webWasm2023: 0
   webEnableSubmoduleStrippingCompatibility: 0
-  scriptingDefineSymbols: {}
+  scriptingDefineSymbols:
+    Android: DOTWEEN;DOTWEEN_NOPHYSICS;SORTIFY
+    EmbeddedLinux: DOTWEEN;DOTWEEN_NOPHYSICS;SORTIFY
+    GameCoreScarlett: DOTWEEN;DOTWEEN_NOPHYSICS;SORTIFY
+    GameCoreXboxOne: DOTWEEN;DOTWEEN_NOPHYSICS;SORTIFY
+    Kepler: DOTWEEN;DOTWEEN_NOPHYSICS;SORTIFY
+    LinuxHeadlessSimulation: DOTWEEN;DOTWEEN_NOPHYSICS;SORTIFY
+    Nintendo Switch: DOTWEEN;DOTWEEN_NOPHYSICS;SORTIFY
+    Nintendo Switch 2: DOTWEEN;DOTWEEN_NOPHYSICS;SORTIFY
+    PS4: DOTWEEN;DOTWEEN_NOPHYSICS;SORTIFY
+    PS5: DOTWEEN;DOTWEEN_NOPHYSICS;SORTIFY
+    QNX: DOTWEEN;DOTWEEN_NOPHYSICS;SORTIFY
+    Standalone: DOTWEEN;DOTWEEN_NOPHYSICS;SORTIFY
+    VisionOS: DOTWEEN;DOTWEEN_NOPHYSICS;SORTIFY
+    WebGL: DOTWEEN;DOTWEEN_NOPHYSICS;SORTIFY
+    Windows Store Apps: DOTWEEN;DOTWEEN_NOPHYSICS
+    XboxOne: DOTWEEN;DOTWEEN_NOPHYSICS;SORTIFY
+    iPhone: DOTWEEN;DOTWEEN_NOPHYSICS
+    tvOS: DOTWEEN;DOTWEEN_NOPHYSICS;SORTIFY
   additionalCompilerArguments: {}
   platformArchitecture: {}
   scriptingBackend:
