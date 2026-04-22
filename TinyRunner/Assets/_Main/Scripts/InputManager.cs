@@ -15,20 +15,22 @@ public class InputManager
         _gameManager = gameManager;
     }
 
-    public void Initialize()
-    {
-        _gameManager.OnStartGame += () => SetInputActive(true);
-        _gameManager.OnGamePaused += () => SetInputActive(false);
-        _gameManager.OnGameOver += () => SetInputActive(false);
-        _gameManager.OnGameContinue += () => SetInputActive(true);
-    }
+    public void Initialize() => _gameManager.OnGameStateChanged += OnGameStateChanged;
 
-    public void Deinitialize()
+    public void Deinitialize() => _gameManager.OnGameStateChanged -= OnGameStateChanged;
+
+    private void OnGameStateChanged(GameState gameState)
     {
-        _gameManager.OnStartGame -= () => SetInputActive(true);
-        _gameManager.OnGamePaused -= () => SetInputActive(false);
-        _gameManager.OnGameOver -= () => SetInputActive(false);
-        _gameManager.OnGameContinue -= () => SetInputActive(true);
+        switch (gameState)
+        {
+            case GameState.StartPlaying:
+            case GameState.Playing:
+                SetInputActive(true);
+                break;
+            default:
+                SetInputActive(false);
+                break;
+        }
     }
 
     public void Update()
@@ -38,7 +40,7 @@ public class InputManager
         GetClickInput();
     }
 
-    public void SetInputActive(bool isActive) => _isActive = isActive;
+    private void SetInputActive(bool isActive) => _isActive = isActive;
 
     private void GetClickInput()
     {

@@ -23,26 +23,29 @@ public class SpeedManager
         _accelerationRate = accelerationRate;
     }
 
-    public void Initialize()
+    public void Initialize() => _gameManager.OnGameStateChanged += OnGameStateChanged;
+
+    public void Deinitialize() => _gameManager.OnGameStateChanged -= OnGameStateChanged;
+
+    private void OnGameStateChanged(GameState gameState)
     {
-        SetActive(false);
-        ResetSpeed();
-
-        _gameManager.OnStartGame += StartUpdate;
-        _gameManager.OnGameOver += ResetSpeed;
-        _gameManager.OnGamePaused += () => SetActive(false);
-        _gameManager.OnGameContinue += () => SetActive(true);
+        switch (gameState)
+        {
+            case GameState.Menu:
+            case GameState.Paused:
+                SetActive(false);
+                break;
+            case GameState.GameOver:
+                ResetSpeed();
+                break;
+            case GameState.StartPlaying:
+                StartUpdate();
+                break;
+            case GameState.Playing:
+                SetActive(true);
+                break;
+        }
     }
-
-    public void Deinitialize()
-    {
-        _gameManager.OnStartGame -= StartUpdate;
-        _gameManager.OnGameOver -= ResetSpeed;
-        _gameManager.OnGamePaused -= () => SetActive(false);
-        _gameManager.OnGameContinue -= () => SetActive(true);
-    }
-
-    public void SetActive(bool isActive) => _isActive = isActive;
 
     public void Update()
     {
@@ -50,6 +53,8 @@ public class SpeedManager
 
         UpdateSpeed();
     }
+
+    private void SetActive(bool isActive) => _isActive = isActive;
 
     private void StartUpdate()
     {

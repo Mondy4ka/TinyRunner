@@ -1,5 +1,4 @@
 using System;
-using UnityEngine;
 
 public class ScoreManager
 {
@@ -7,29 +6,39 @@ public class ScoreManager
     public event Action<int> OnBestScoreChanged;
 
     private readonly GameManager _gameManager;
-    private readonly PlayerMovement _playerMovement;
+    private readonly PlayerPositionTracker _positionTracker;
     private readonly int _additionScore;
 
     private int _currentScore;
     private int _bestScore;
 
-    public ScoreManager(GameManager gameManager, PlayerMovement playerMovement, int additionScore)
+    public ScoreManager(GameManager gameManager, PlayerPositionTracker positionTracker, int additionScore)
     {
         _gameManager = gameManager;
-        _playerMovement = playerMovement;
+        _positionTracker = positionTracker;
         _additionScore = additionScore;
     }
 
     public void Initialize()
     {
-        _gameManager.OnStartGame += ResetScore;
-        _playerMovement.OnScoreDistance += AddScore;
+        _gameManager.OnGameStateChanged += OnGameStateChanged;
+        _positionTracker.OnScoringPoints += AddScore;
     }
 
     public void Deinitialize()
     {
-        _gameManager.OnStartGame -= ResetScore;
-        _playerMovement.OnScoreDistance -= AddScore;
+        _gameManager.OnGameStateChanged -= OnGameStateChanged;
+        _positionTracker.OnScoringPoints -= AddScore;
+    }
+
+    private void OnGameStateChanged(GameState gameState)
+    {
+        switch (gameState)
+        {
+            case GameState.StartPlaying:
+                ResetScore();
+                break;
+        }
     }
 
     private void ResetScore()

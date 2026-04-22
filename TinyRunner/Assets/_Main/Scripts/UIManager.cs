@@ -22,24 +22,36 @@ public class UIManager : MonoBehaviour
         _gameManager = gameManager;
         _scoreManager = scoreManager;
 
-        _gameManager.OnStartGame += ActivateGameUI;
-        _gameManager.OnGamePaused += ActivatePauseUI;
-        _gameManager.OnGameRestart += ActivateMenuUI;
-        _gameManager.OnGameContinue += ActivateGameUI;
-        _gameManager.OnGameOver += ActivateGameoverUI;
+        _gameManager.OnGameStateChanged += OnGameStateChanged;
         _scoreManager.OnScoreChanged += SetScoreText;
         _scoreManager.OnBestScoreChanged += SetBestScoreText;
     }
 
     public void Deinitialize()
     {
-        _gameManager.OnStartGame -= ActivateGameUI;
-        _gameManager.OnGamePaused -= ActivatePauseUI;
-        _gameManager.OnGameRestart -= ActivateMenuUI;
-        _gameManager.OnGameContinue -= ActivateGameUI;
-        _gameManager.OnGameOver -= ActivateGameoverUI;
+        _gameManager.OnGameStateChanged -= OnGameStateChanged;
         _scoreManager.OnScoreChanged -= SetScoreText;
         _scoreManager.OnBestScoreChanged -= SetBestScoreText;
+    }
+
+    private void OnGameStateChanged(GameState gameState)
+    {
+        switch (gameState)
+        {
+            case GameState.Menu:
+                ActivateMenuUI();
+                break;
+            case GameState.Paused:
+                ActivatePauseUI();
+                break;
+            case GameState.GameOver:
+                ActivateGameoverUI();
+                break;
+            case GameState.StartPlaying:
+            case GameState.Playing:
+                ActivateGameUI();
+                break;
+        }
     }
 
     private void ActivateGameUI()

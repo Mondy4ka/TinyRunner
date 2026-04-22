@@ -6,7 +6,7 @@ public class CameraFollow : MonoBehaviour
     [SerializeField] private Transform _cameraTransform;
     [SerializeField] private float _offsetX;
 
-    private void Update() => Follow();
+    private void LateUpdate() => Follow();
 
     private void Follow()
     {

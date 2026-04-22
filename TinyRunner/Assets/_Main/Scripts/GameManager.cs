@@ -4,13 +4,25 @@ using UnityEngine;
 
 public class GameManager : MonoBehaviour
 {
-    public event Action OnStartGame;
-    public event Action OnGamePaused;
-    public event Action OnGameContinue;
-    public event Action OnGameOver;
-    public event Action OnGameRestart;
+    public event Action<GameState> OnGameStateChanged;
 
-    [SerializeField] private Player _player;
+    //public event Action OnStartGame;
+    //public event Action OnGamePaused;
+    //public event Action OnGameContinue;
+    //public event Action OnGameOver;
+    //public event Action OnGameRestart;
+
+    public GameState GameState
+    {
+        get => _gameState;
+        set
+        {
+            _gameState = value;
+            OnGameStateChanged?.Invoke(_gameState);
+        }
+    }
+
+    [SerializeField] private PlayerController _player;
     [SerializeField] private UIManager _uiManager;
 
     [Header("Game Speed Settings")]
@@ -30,6 +42,8 @@ public class GameManager : MonoBehaviour
     private SpeedManager _speedManager;
     private ScoreManager _scoreManager;
 
+    private GameState _gameState;
+
     private void Awake()
     {
         _inputManager = new(this);
@@ -37,8 +51,8 @@ public class GameManager : MonoBehaviour
 
         _player.Initialize(this, _inputManager, _speedManager);
 
-        _scoreManager = new(this, _player.PlayerMovement, _additionScore);
-        _levelManager = new(this, _levelChunkPrefabs, _chunkLength, _player.PlayerMovement);
+        _scoreManager = new(this, _player.PlayerPositionTracker, _additionScore);
+        _levelManager = new(this, _levelChunkPrefabs, _chunkLength, _player.PlayerPositionTracker);
 
         _scoreManager.Initialize();
         _speedManager.Initialize();
@@ -46,8 +60,11 @@ public class GameManager : MonoBehaviour
         _levelManager.Initialize();
         _uiManager.Initialize(this, _scoreManager);
 
-        _player.PlayerTrigger.OnPlayerDeath += GameOver;
+        _player.PlayerCollisionTracker.OnPlayerDeath += GameOver;
     }
+
+    private void Start() => GameState = GameState.Menu;
+
 
     private void Update()
     {
@@ -55,15 +72,15 @@ public class GameManager : MonoBehaviour
         _speedManager?.Update();
     }
 
-    public void StartGame() => OnStartGame?.Invoke();
+    public void StartGame() => GameState = GameState.StartPlaying;
 
-    public void GameOver() => OnGameOver?.Invoke();
-    
-    public void PauseGame() => OnGamePaused?.Invoke();
+    public void GameOver() => GameState = GameState.GameOver;
 
-    public void ContinueGame() => OnGameContinue?.Invoke();
+    public void PauseGame() => GameState = GameState.Paused;
 
-    public void RestartGame() => OnGameRestart?.Invoke();
+    public void ContinueGame() => GameState = GameState.Playing;
+
+    public void RestartGame() => GameState = GameState.Menu;
 
     private void OnDestroy()
     {
@@ -73,6 +90,15 @@ public class GameManager : MonoBehaviour
         _levelManager?.Deinitialize();
         _uiManager.Deinitialize();
 
-        _player.PlayerTrigger.OnPlayerDeath -= GameOver;
+        _player.PlayerCollisionTracker.OnPlayerDeath -= GameOver;
     }
+}
+
+public enum GameState
+{
+    Menu,
+    StartPlaying,
+    Playing,
+    Paused,
+    GameOver
 }

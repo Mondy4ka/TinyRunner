@@ -7,30 +7,43 @@ using UnityEngine;
 public class LevelManager
 {
     private readonly GameManager _gameManager;
-    private readonly PlayerMovement _playerMovement;
+    private readonly PlayerPositionTracker _positionTracker;
     private readonly IReadOnlyList<GameObject> _levelChunkPrefabs;
     private readonly float _chunkLength;
 
     private List<GameObject> _activeChunks = new();
 
-    public LevelManager(GameManager gameManager, List<GameObject> levelChunkPrefabs, float chunkLength, PlayerMovement playerMovement)
+    public LevelManager(GameManager gameManager, List<GameObject> levelChunkPrefabs, float chunkLength, PlayerPositionTracker positionTracker)
     {
         _gameManager = gameManager;
         _levelChunkPrefabs = levelChunkPrefabs;
         _chunkLength = chunkLength;
-        _playerMovement = playerMovement;
+        _positionTracker = positionTracker;
     }
 
     public void Initialize()
     {
-        _playerMovement.OnDistanceChanged += SpawnChunk;
-        _gameManager.OnStartGame += StartGame;
+        _positionTracker.OnChunkSpawning += SpawnChunk;
+        _gameManager.OnGameStateChanged += OnGameStateChanged;
     }
 
     public void Deinitialize()
     {
-        _playerMovement.OnDistanceChanged -= SpawnChunk;
-        _gameManager.OnStartGame -= StartGame;
+        _positionTracker.OnChunkSpawning -= SpawnChunk;
+        _gameManager.OnGameStateChanged -= OnGameStateChanged;
+    }
+
+    private void OnGameStateChanged(GameState gameState)
+    {
+        switch (gameState)
+        {
+            case GameState.StartPlaying:
+                StartGame();
+                break;
+            case GameState.Menu:
+                ClearLevel();
+                break;
+        }
     }
 
     private void StartGame()
