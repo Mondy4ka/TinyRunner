@@ -63,8 +63,14 @@ public class GameManager : MonoBehaviour
         _player.PlayerCollisionTracker.OnPlayerDeath += GameOver;
     }
 
-    private void Start() => GameState = GameState.Menu;
+    private void Start()
+    {
+        Application.targetFrameRate = (int)Screen.currentResolution.refreshRateRatio.value;
+        //Application.targetFrameRate = 999;
+        QualitySettings.vSyncCount = 0;
 
+        GameState = GameState.Menu;
+    }
 
     private void Update()
     {

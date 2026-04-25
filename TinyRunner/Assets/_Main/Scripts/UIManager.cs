@@ -14,8 +14,15 @@ public class UIManager : MonoBehaviour
     [SerializeField] private GameObject _gameoverUI;
     [SerializeField] private TMP_Text _scoreText;
 
+    //[SerializeField] private TMP_Text _fpsText;
+
     private GameManager _gameManager;
     private ScoreManager _scoreManager;
+
+    //private void Update()
+    //{
+    //    _fpsText.text = Mathf.Round(1.0f / Time.deltaTime).ToString();
+    //}
 
     public void Initialize(GameManager gameManager, ScoreManager scoreManager)
     {

@@ -1,38 +1,6 @@
 using DG.Tweening;
 using UnityEngine;
 
-//public class PlayerController : MonoBehaviour
-//{
-//    public PlayerMovement PlayerMovement { get; private set; }
-//    public PlayerCollisionTracker PlayerTrigger => _playerTrigger;
-
-//    [Header("Movement Settings")]
-//    [SerializeField] private float _topYPosition;
-//    [SerializeField] private float _downYPosition;
-//    [SerializeField] private AnimationCurve _animationCurve;
-
-//    [Header("Hitbox Settings")]
-//    [SerializeField] private PlayerCollisionTracker _playerTrigger;
-
-//    [Header("Animation Settings")]
-//    [SerializeField] private Ease _ease;
-//    [SerializeField] private float _animtaionDuration;
-
-//    public void Initialize(GameManager gameManager, InputManager inputManager, SpeedManager speedManager)
-//    {
-//        PlayerMovement = new(gameManager, inputManager, speedManager, _playerTrigger, transform, _topYPosition, _downYPosition, _ease, _animtaionDuration, _animationCurve);
-
-//        PlayerMovement.Initialize();
-//    }
-
-//    private void Update() => PlayerMovement.Update();
-
-//    public void OnDestroy()
-//    {
-//        PlayerMovement.Deintialize();
-//    }
-//}
-
 public class PlayerController : MonoBehaviour
 {
     public PlayerCollisionTracker PlayerCollisionTracker => _collisionTracker;
@@ -53,6 +21,7 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private AnimationCurve _jumpCurve;
     [SerializeField] private Ease _ease;
     [SerializeField] private float _animtaionDuration;
+    [SerializeField] private ParticleSystem _trail;
 
     private GameManager _gameManager;
     private bool _isMoving;
@@ -66,8 +35,8 @@ public class PlayerController : MonoBehaviour
 
         PlayerMover.Initialize();
         PlayerPositionTracker.Initialize();
-        PlayerJumper.Initialize(PlayerLineSwitcher);
         PlayerLineSwitcher.Initialize();
+        PlayerJumper.Initialize(PlayerLineSwitcher);
 
         _gameManager = gameManager;
         _gameManager.OnGameStateChanged += OnGameStateChanged;
@@ -90,14 +59,17 @@ public class PlayerController : MonoBehaviour
             case GameState.Paused:
             case GameState.GameOver:
                 _isMoving = false;
+                _trail.Stop();
                 break;
             case GameState.Menu:
                 PlayerMover.SetStartPosition();
                 PlayerLineSwitcher.SetStartPosition();
                 _isMoving = false;
+                _trail.Stop();
                 break;
             case GameState.StartPlaying:
             case GameState.Playing:
+                _trail.Play();
                 _isMoving = true;
                 break;
         }

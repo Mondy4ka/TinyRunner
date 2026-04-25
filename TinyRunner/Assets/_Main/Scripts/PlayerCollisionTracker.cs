@@ -11,8 +11,16 @@ public class PlayerCollisionTracker : MonoBehaviour
     {
         if (collision == null) return;
 
-        if (collision.TryGetComponent(out Obstacle _))
+        if (collision.TryGetComponent(out Obstacle obstacle))
+        {
+            if (obstacle.IsGhost)
+            {
+                obstacle.Break();
+                return;
+            }
+
             OnPlayerDeath?.Invoke();
+        }
 
         if (collision.TryGetComponent(out JumpPad _))
             OnPlayerJump?.Invoke();
